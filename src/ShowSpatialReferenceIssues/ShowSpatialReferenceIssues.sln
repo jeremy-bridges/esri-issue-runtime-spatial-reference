@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32421.90
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShowSpatialReferenceIssues", "ShowSpatialReferenceIssues\ShowSpatialReferenceIssues.csproj", "{583BCB49-DC87-4CBE-99AA-D7E3899AFE14}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{583BCB49-DC87-4CBE-99AA-D7E3899AFE14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{583BCB49-DC87-4CBE-99AA-D7E3899AFE14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{583BCB49-DC87-4CBE-99AA-D7E3899AFE14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{583BCB49-DC87-4CBE-99AA-D7E3899AFE14}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B0CC1CFC-0038-4E81-A48A-F1A9AD1BF93A}
+	EndGlobalSection
+EndGlobal
