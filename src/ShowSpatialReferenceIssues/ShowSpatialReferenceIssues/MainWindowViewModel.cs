@@ -27,7 +27,8 @@ namespace ShowSpatialReferenceIssues
             Map = new Map(ColoradoStatePlanarSpatialReference())
             {
                 MinScale = 100000000,
-                MaxScale = 0
+                MaxScale = 0,
+                InitialViewpoint = new Viewpoint(Colorado())
             };
 
             Map.Basemap.BaseLayers.Add(new ArcGISMapImageLayer(new Uri(
@@ -85,8 +86,6 @@ namespace ShowSpatialReferenceIssues
                         gdb.GeodatabaseFeatureTables.Select(t => new FeatureLayer(t)));
                     Map.OperationalLayers.AddRange(
                         gdb.GeodatabaseAnnotationTables.Select(t => new AnnotationLayer(t)));
-
-                    _zoom(Colorado());
                 });
             }
         }
