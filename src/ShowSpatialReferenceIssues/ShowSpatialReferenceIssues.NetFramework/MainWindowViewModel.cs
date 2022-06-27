@@ -8,14 +8,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace ShowSpatialReferenceIssues
+namespace ShowSpatialReferenceIssues.NetFramework
 {
     public class MainWindowViewModel : PropertyChangedBase
     {
         private readonly Action<string> _log;
-        private readonly Action<Geometry?> _zoom;
+        private readonly Action<Geometry> _zoom;
 
-        public MainWindowViewModel(Action<string> log, Action<Geometry?> zoom)
+        public MainWindowViewModel(Action<string> log, Action<Geometry> zoom)
         {
             _log = log;
             _zoom = zoom;
@@ -82,9 +82,9 @@ namespace ShowSpatialReferenceIssues
                     var gdb = t.Result;
 
                     Map.OperationalLayers.AddRange(
-                        gdb.GeodatabaseFeatureTables.Select(t => new FeatureLayer(t)));
+                        gdb.GeodatabaseFeatureTables.Select(table => new FeatureLayer(table)));
                     Map.OperationalLayers.AddRange(
-                        gdb.GeodatabaseAnnotationTables.Select(t => new AnnotationLayer(t)));
+                        gdb.GeodatabaseAnnotationTables.Select(table => new AnnotationLayer(table)));
 
                     _zoom(Colorado());
                 });
@@ -106,7 +106,7 @@ namespace ShowSpatialReferenceIssues
             return SpatialReference.Create(26753);
         }
 
-        private static Geometry? Colorado()
+        private static Geometry Colorado()
         {
             return Geometry.FromJson(
                 "{\"xmin\":-11682081.737725906,\"ymin\":4907420.5648448579,\"xmax\":-11637351.215794165,\"ymax\":4943740.2194048185,\"spatialReference\":{\"wkid\":102100,\"latestWkid\":3857}}");
@@ -117,7 +117,7 @@ namespace ShowSpatialReferenceIssues
             return SpatialReference.Create(2263);
         }
 
-        private static Geometry? NewYorkLongIsland()
+        private static Geometry NewYorkLongIsland()
         {
             return Geometry.FromJson(
                 @"{""xmin"":-8252911.5025626058,""ymin"":4965501.9753929507,""xmax"":-8218343.0578241879,""ymax"":4987128.2633492388,""spatialReference"":{ ""wkid"":102100,""latestWkid"":3857}}");
