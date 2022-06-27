@@ -7,7 +7,7 @@
         xmlns:esri="http://schemas.esri.com/arcgis/runtime/2013"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance local:MainWindowViewModel}"
-        Title="MainWindow" Height="1100" Width="1300">
+        Title="MainWindow" Height="900" Width="1300">
     <Grid>
         <esri:MapView 
             x:Name="MapView"
@@ -16,8 +16,8 @@
             x:Name="Log"
             HorizontalAlignment="Right"
             VerticalAlignment="Bottom"
-            Width="400"
-            Height="60"
+            Width="700"
+            Height="80"
             VerticalScrollBarVisibility="Auto"/>
         <StackPanel
             HorizontalAlignment="Right"
@@ -25,7 +25,18 @@
             Margin="5">
             <Button 
                 Content="Add Replicas"
-                Command="{Binding AddReplicasCommand}"/>
+                Command="{Binding AddReplicasCommand}"
+                Visibility="Collapsed"/>
+            <Button
+                Margin="0 5 0 0"
+                Content="Go to Colorado"
+                Command="{Binding GoToColoradoCommand}"
+                Visibility="Collapsed"/>
+            <Button
+                Margin="0 5 0 0"
+                Content="Go to New York Island"
+                Command="{Binding GoToNewYorkIslandCommand}"
+                Visibility="Collapsed"/>
         </StackPanel>
     </Grid>
 </Window>

@@ -11,4 +11,10 @@
     <PackageReference Include="Esri.ArcGISRuntime.WPF" Version="100.14.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="miner_fiber.geodatabase">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

@@ -4,6 +4,7 @@ using Esri.ArcGISRuntime.Mapping;
 using Microsoft.Win32;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace ShowSpatialReferenceIssues
@@ -17,14 +18,34 @@ namespace ShowSpatialReferenceIssues
         {
             _log = log;
             _zoom = zoom;
-            AddReplicasCommand = new SimpleCommand(AddReplicas);
 
-            // rotated spatial reference, specifically designed for New York long island
-            Map = new Map(SpatialReference.Create(2263)); 
+            AddReplicasCommand = new SimpleCommand(AddReplicas);
+            GoToColoradoCommand = new SimpleCommand(GoToColorado);
+            GoToNewYorkIslandCommand = new SimpleCommand(GoToNewYorkIsland);
+
+            Map = new Map(ColoradoStatePlanarSpatialReference())
+            {
+                MinScale = 100000000,
+                MaxScale = 0
+            };
+
+            Map.Basemap.BaseLayers.Add(new ArcGISMapImageLayer(new Uri(
+                "https://services.arcgisonline.com/arcgis/rest/services/World_Street_Map/MapServer"))
+            {
+                Id = Guid.NewGuid().ToString(),
+                Name = "Main Basemap"
+            });
+
+            Task.Delay(TimeSpan.FromSeconds(2)).ContinueWith(t =>
+            {
+                AddReplicas(new[] {".\\miner_fiber.geodatabase"});
+            });
         }
 
         public Map Map { get; }
         public ICommand AddReplicasCommand { get; }
+        public ICommand GoToColoradoCommand { get; }
+        public ICommand GoToNewYorkIslandCommand { get; }
 
         public void AddReplicas()
         {
@@ -36,32 +57,63 @@ namespace ShowSpatialReferenceIssues
 
             if (dialog.ShowDialog() == true)
             {
-                foreach (var fileName in dialog.FileNames)
-                {
-                    Geodatabase.OpenAsync(fileName).ContinueWith(t =>
-                    {
-                        if (t.IsCanceled)
-                        {
-                            _log($"Opening replica at '{fileName}' cancelled");
-                            return;
-                        }
-                        if (t.IsFaulted)
-                        {
-                            _log($"Opening replica at '{fileName}' failed because {t.Exception?.Message}");
-                            return;
-                        }
-
-                        var gdb = t.Result;
-
-                        Map.OperationalLayers.AddRange(
-                            gdb.GeodatabaseFeatureTables.Select(t => new FeatureLayer(t)));
-                        Map.OperationalLayers.AddRange(
-                            gdb.GeodatabaseAnnotationTables.Select(t => new AnnotationLayer(t)));
-
-                        _zoom(NewYorkLongIsland());
-                    });
-                }
+                AddReplicas(dialog.FileNames);
             }
+        }
+
+        private void AddReplicas(string[] fileNames)
+        {
+            foreach (var fileName in fileNames)
+            {
+                Geodatabase.OpenAsync(fileName).ContinueWith(t =>
+                {
+                    if (t.IsCanceled)
+                    {
+                        _log($"Opening replica at '{fileName}' cancelled");
+                        return;
+                    }
+                    if (t.IsFaulted)
+                    {
+                        _log($"Opening replica at '{fileName}' failed because {t.Exception?.Message}");
+                        return;
+                    }
+
+                    var gdb = t.Result;
+
+                    Map.OperationalLayers.AddRange(
+                        gdb.GeodatabaseFeatureTables.Select(t => new FeatureLayer(t)));
+                    Map.OperationalLayers.AddRange(
+                        gdb.GeodatabaseAnnotationTables.Select(t => new AnnotationLayer(t)));
+
+                    _zoom(Colorado());
+                });
+            }
+        }
+
+        private void GoToColorado()
+        {
+            _zoom(Colorado());
+        }
+
+        private void GoToNewYorkIsland()
+        {
+            _zoom(NewYorkLongIsland());
+        }
+
+        private static SpatialReference ColoradoStatePlanarSpatialReference()
+        {
+            return SpatialReference.Create(26753);
+        }
+
+        private static Geometry? Colorado()
+        {
+            return Geometry.FromJson(
+                "{\"xmin\":-11682081.737725906,\"ymin\":4907420.5648448579,\"xmax\":-11637351.215794165,\"ymax\":4943740.2194048185,\"spatialReference\":{\"wkid\":102100,\"latestWkid\":3857}}");
+        }
+
+        private static SpatialReference NewYorkIslandSpatialReference()
+        {
+            return SpatialReference.Create(2263);
         }
 
         private static Geometry? NewYorkLongIsland()
